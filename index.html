@@ -23,41 +23,71 @@
             margin: 10px;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/6.0.0/big.min.js"></script>
 </head>
 <body>
 
     <h1>The Collapse of Incrementals</h1>
     <div id="collapse">Collapse: 1</div>
     <button id="increaseCollapse">Increase Collapse</button>
-    <button id="enhanceCollapse">Enhance Collapse Speed</button>
+    <button id="enhanceIncreaseMultiplier">Enhance Increase Multiplier (100 Collapse)</button>
+    <button id="successorAutoclicker">Successor Autoclicker (800 Collapse)</button>
+    <button id="enhanceAutoclicker">Enhance Autoclicker (1600 Collapse)</button>
 
     <script>
-        let collapse = 1;
+        let collapse = new Big(1);
         const collapseDisplay = document.getElementById('collapse');
-        let speedIncrease = 0.01;
+        let increaseMultiplier = 1.47;
+        let autoclickerSpeed = new Big(0);
+        let baseAutoclickSpeed = new Big(0.04); // 4x per second
+        let autoclickerCostMultiplier = 1;
 
         // Update the display
         function updateDisplay() {
-            collapseDisplay.textContent = `Collapse: ${collapse.toFixed(2)}`;
+            collapseDisplay.textContent = `Collapse: ${collapse.toString()}`;
         }
 
         // Increase collapse by 1
         document.getElementById('increaseCollapse').addEventListener('click', () => {
-            collapse += 1;
+            collapse = collapse.plus(1);
             updateDisplay();
         });
 
-        // Enhance collapse speed
-        document.getElementById('enhanceCollapse').addEventListener('click', () => {
-            const chosenMultiplier = Math.random() * 3 + 1; // Random between 1 and 4
-            speedIncrease *= chosenMultiplier; // Enhance speed
+        // Enhance increase multiplier
+        document.getElementById('enhanceIncreaseMultiplier').addEventListener('click', () => {
+            if (collapse.gte(100)) {
+                collapse = collapse.minus(100);
+                increaseMultiplier *= 1.47; // Increase multiplier
+                updateDisplay();
+            }
+        });
+
+        // Successor autoclicker
+        document.getElementById('successorAutoclicker').addEventListener('click', () => {
+            if (collapse.gte(800)) {
+                collapse = collapse.minus(800);
+                autoclickerSpeed = autoclickerSpeed.plus(baseAutoclickSpeed);
+                baseAutoclickSpeed = baseAutoclickSpeed.times(2);
+                updateDisplay();
+            }
+        });
+
+        // Enhance autoclicker
+        document.getElementById('enhanceAutoclicker').addEventListener('click', () => {
+            if (collapse.gte(1600)) {
+                collapse = collapse.minus(1600);
+                autoclickerSpeed = autoclickerSpeed.plus(baseAutoclickSpeed);
+                baseAutoclickSpeed = baseAutoclickSpeed.times(2);
+                updateDisplay();
+            }
         });
 
         // Automatic increase of collapse
         setInterval(() => {
-            collapse += speedIncrease;
+            collapse = collapse.plus(autoclickerSpeed);
             updateDisplay();
-        }, 10); // 0.01 seconds
+        }, 100); // 0.1 seconds (slower progression)
+
     </script>
 
 </body>
