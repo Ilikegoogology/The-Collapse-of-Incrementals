@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Collapse of Incrementals</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        #collapse {
+            font-size: 2em;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>The Collapse of Incrementals</h1>
+    <div id="collapse">Collapse: 1</div>
+    <button id="increaseCollapse">Increase Collapse</button>
+    <input type="number" id="enhanceMultiplier" placeholder="Multiplier (1-4)" step="0.1" min="1" max="4">
+    <button id="enhanceCollapse">Enhance Collapse</button>
+
+    <script>
+        let collapse = 1;
+        const collapseDisplay = document.getElementById('collapse');
+
+        // Update the display
+        function updateDisplay() {
+            collapseDisplay.textContent = `Collapse: ${collapse.toFixed(2)}`;
+        }
+
+        // Increase collapse by 1
+        document.getElementById('increaseCollapse').addEventListener('click', () => {
+            collapse += 1;
+            updateDisplay();
+        });
+
+        // Enhance collapse
+        document.getElementById('enhanceCollapse').addEventListener('click', () => {
+            const multiplier = parseFloat(document.getElementById('enhanceMultiplier').value);
+            const chosenMultiplier = (multiplier >= 1 && multiplier <= 4) ? multiplier : (Math.random() * 3 + 1); // Random between 1 and 4
+            collapse += chosenMultiplier;
+            updateDisplay();
+        });
+
+        // Automatic increase of collapse
+        setInterval(() => {
+            collapse += 0.01;
+            updateDisplay();
+        }, 10); // 0.01 seconds
+    </script>
+
+</body>
+</html>
