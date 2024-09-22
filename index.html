@@ -65,16 +65,18 @@
     <script>
         let collapse = new Big(1);
         const collapseDisplay = document.getElementById('collapse');
-        let increaseMultiplier = 1;
-        let successorActive = false;
-        let enhanceActive = false;
+        let increaseMultiplier = 1; // Initial increase multiplier
+        let successorActive = false; // Flag for Successor Autoclicker
+        let enhanceActive = false; // Flag for Enhance Autoclicker
+        let successorClicks = 0; // Count of Successor clicks
+        let enhanceClicks = 0; // Count of Enhance clicks
         
         // Update the display
         function updateDisplay() {
             collapseDisplay.textContent = `Collapse: ${collapse.toString()}`;
         }
 
-        // Increase collapse by 1
+        // Increase collapse by the current multiplier
         document.getElementById('increaseCollapse').addEventListener('click', () => {
             collapse = collapse.plus(increaseMultiplier);
             updateDisplay();
@@ -132,10 +134,12 @@
         // Automatic increase of collapse
         setInterval(() => {
             if (successorActive) {
-                collapse = collapse.plus(increaseMultiplier); // Successor Autoclicker clicks Increase Collapse
+                successorClicks += increaseMultiplier; // Successor Autoclicker clicks Increase Collapse
+                collapse = collapse.plus(successorClicks);
             }
             if (enhanceActive) {
-                collapse = collapse.plus(0.325); // Enhance Autoclicker clicks Enhance Collapse
+                enhanceClicks += 0.325; // Enhance Autoclicker clicks Enhance Collapse
+                collapse = collapse.plus(enhanceClicks);
             }
             updateDisplay();
         }, 1000); // Every second for autoclickers
