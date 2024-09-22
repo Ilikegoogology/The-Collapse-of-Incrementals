@@ -65,11 +65,10 @@
     <script>
         let collapse = new Big(1);
         const collapseDisplay = document.getElementById('collapse');
-        let increaseMultiplier = 1.47;
-        let autoclickerSpeed = new Big(0);
-        let baseAutoclickSpeed = new Big(0.01); // 1x per second (slower)
-        let speedIncrease = new Big(0.01); // Initial speed for enhance
-
+        let increaseMultiplier = 1;
+        let successorActive = false;
+        let enhanceActive = false;
+        
         // Update the display
         function updateDisplay() {
             collapseDisplay.textContent = `Collapse: ${collapse.toString()}`;
@@ -77,13 +76,14 @@
 
         // Increase collapse by 1
         document.getElementById('increaseCollapse').addEventListener('click', () => {
-            collapse = collapse.plus(1);
+            collapse = collapse.plus(increaseMultiplier);
             updateDisplay();
         });
 
         // Enhance collapse speed
         document.getElementById('enhanceCollapse').addEventListener('click', () => {
-            speedIncrease = speedIncrease.plus(0.325); // Add +0.325 speed
+            collapse = collapse.plus(0.325); // Add +0.325 to collapse speed
+            updateDisplay();
         });
 
         // Toggle upgrades visibility
@@ -105,7 +105,7 @@
         document.getElementById('enhanceIncreaseMultiplier').addEventListener('click', () => {
             if (collapse.gte(100)) {
                 collapse = collapse.minus(100);
-                increaseMultiplier *= 2; // Double the multiplier
+                increaseMultiplier *= 2; // Double the increase
                 updateDisplay();
             }
         });
@@ -114,8 +114,7 @@
         document.getElementById('successorAutoclicker').addEventListener('click', () => {
             if (collapse.gte(800)) {
                 collapse = collapse.minus(800);
-                autoclickerSpeed = autoclickerSpeed.plus(baseAutoclickSpeed);
-                baseAutoclickSpeed = baseAutoclickSpeed.times(2);
+                successorActive = true; // Activate Successor Autoclicker
                 document.getElementById('toggleAutoclickers').style.display = 'block'; // Show autoclickers toggle
                 updateDisplay();
             }
@@ -125,24 +124,18 @@
         document.getElementById('enhanceAutoclicker').addEventListener('click', () => {
             if (collapse.gte(1600)) {
                 collapse = collapse.minus(1600);
-                speedIncrease = speedIncrease.plus(0.325); // Enhance speed
+                enhanceActive = true; // Activate Enhance Autoclicker
                 updateDisplay();
             }
         });
 
         // Automatic increase of collapse
         setInterval(() => {
-            collapse = collapse.plus(autoclickerSpeed).plus(speedIncrease);
-            updateDisplay();
-        }, 100); // 0.1 seconds (slower progression)
-
-        // Automatic clicks for Successor and Enhance Autoclickers
-        setInterval(() => {
-            if (autoclickerSpeed.gt(0)) {
-                collapse = collapse.plus(autoclickerSpeed); // Successor Autoclicker clicks Increase Collapse
+            if (successorActive) {
+                collapse = collapse.plus(increaseMultiplier); // Successor Autoclicker clicks Increase Collapse
             }
-            if (speedIncrease.gt(0)) {
-                collapse = collapse.plus(speedIncrease); // Enhance Autoclicker clicks Enhance Collapse
+            if (enhanceActive) {
+                collapse = collapse.plus(0.325); // Enhance Autoclicker clicks Enhance Collapse
             }
             updateDisplay();
         }, 1000); // Every second for autoclickers
