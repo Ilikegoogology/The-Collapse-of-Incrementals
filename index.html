@@ -32,11 +32,11 @@
         button:hover {
             box-shadow: 0 0 10px blue, 0 0 20px blue, 0 0 30px blue;
         }
-        #upgrades {
+        #upgrades, #autoclickers {
             display: none;
             margin-top: 20px;
         }
-        #toggleUpgrades {
+        #toggleUpgrades, #toggleAutoclickers {
             margin-top: 20px;
         }
     </style>
@@ -49,11 +49,16 @@
     <button id="increaseCollapse">Increase Collapse</button>
     <button id="enhanceCollapse">Enhance Collapse</button>
     <button id="toggleUpgrades">Toggle Upgrades</button>
+    <button id="toggleAutoclickers" style="display: none;">Toggle Autoclickers</button>
     
     <div id="upgrades">
         <h2>Upgrades</h2>
         <button id="enhanceIncreaseMultiplier">Enhance Increase Multiplier (100 Collapse)</button>
         <button id="successorAutoclicker">Successor Autoclicker (800 Collapse)</button>
+    </div>
+
+    <div id="autoclickers">
+        <h2>Autoclickers</h2>
         <button id="enhanceAutoclicker">Enhance Autoclicker (1600 Collapse)</button>
     </div>
 
@@ -85,6 +90,15 @@
         document.getElementById('toggleUpgrades').addEventListener('click', () => {
             const upgradesDiv = document.getElementById('upgrades');
             upgradesDiv.style.display = upgradesDiv.style.display === 'none' ? 'block' : 'none';
+            if (upgradesDiv.style.display === 'block') {
+                document.getElementById('toggleAutoclickers').style.display = 'block'; // Show autoclickers toggle
+            }
+        });
+
+        // Toggle autoclickers visibility
+        document.getElementById('toggleAutoclickers').addEventListener('click', () => {
+            const autoclickersDiv = document.getElementById('autoclickers');
+            autoclickersDiv.style.display = autoclickersDiv.style.display === 'none' ? 'block' : 'none';
         });
 
         // Enhance increase multiplier
@@ -102,6 +116,7 @@
                 collapse = collapse.minus(800);
                 autoclickerSpeed = autoclickerSpeed.plus(baseAutoclickSpeed);
                 baseAutoclickSpeed = baseAutoclickSpeed.times(2);
+                document.getElementById('toggleAutoclickers').style.display = 'block'; // Show autoclickers toggle
                 updateDisplay();
             }
         });
@@ -110,8 +125,7 @@
         document.getElementById('enhanceAutoclicker').addEventListener('click', () => {
             if (collapse.gte(1600)) {
                 collapse = collapse.minus(1600);
-                autoclickerSpeed = autoclickerSpeed.plus(baseAutoclickSpeed);
-                baseAutoclickSpeed = baseAutoclickSpeed.times(2);
+                speedIncrease = speedIncrease.plus(0.325); // Enhance speed
                 updateDisplay();
             }
         });
@@ -121,6 +135,17 @@
             collapse = collapse.plus(autoclickerSpeed).plus(speedIncrease);
             updateDisplay();
         }, 100); // 0.1 seconds (slower progression)
+
+        // Automatic clicks for Successor and Enhance Autoclickers
+        setInterval(() => {
+            if (autoclickerSpeed.gt(0)) {
+                collapse = collapse.plus(autoclickerSpeed); // Successor Autoclicker clicks Increase Collapse
+            }
+            if (speedIncrease.gt(0)) {
+                collapse = collapse.plus(speedIncrease); // Enhance Autoclicker clicks Enhance Collapse
+            }
+            updateDisplay();
+        }, 1000); // Every second for autoclickers
 
     </script>
 
