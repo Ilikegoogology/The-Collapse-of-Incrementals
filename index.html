@@ -42,7 +42,7 @@
             margin-top: 20px;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/6.0.0/big.min.js"></script>
+    <script src="https://unpkg.com/break_infinity.js/dist/break_infinity.min.js"></script>
 </head>
 <body>
 
@@ -131,14 +131,14 @@
     </div>
 
     <script>
-        let collapse = new Big(1);
+        let collapse = new Decimal(1);
         const collapseDisplay = document.getElementById('collapse');
-        let increaseMultiplier = 1;
-        let enhanceSpeed = 1;
+        let increaseMultiplier = new Decimal(1);
+        let enhanceSpeed = new Decimal(1);
         let autoclickers = {
-            successor: { cost: 800, speed: 1000, active: false },
-            enhance: { cost: 1600, speed: 1000, active: false },
-            enhanceMultiplier: { cost: 3500, speed: 1000, active: false }
+            successor: { cost: new Decimal(800), speed: 1000, active: false },
+            enhance: { cost: new Decimal(1600), speed: 1000, active: false },
+            enhanceMultiplier: { cost: new Decimal(3500), speed: 1000, active: false }
         };
 
         // Format number with commas and decimals
@@ -162,7 +162,7 @@
 
         // Enhance collapse speed
         document.getElementById('enhanceCollapse').addEventListener('click', () => {
-            enhanceSpeed *= 1.0015;
+            enhanceSpeed = enhanceSpeed.mul(1.0015);
             updateDisplay();
         });
 
@@ -193,7 +193,7 @@
         document.getElementById('enhanceIncreaseMultiplier').addEventListener('click', () => {
             if (collapse.gte(100)) {
                 collapse = collapse.minus(100);
-                increaseMultiplier *= 2;
+                increaseMultiplier = increaseMultiplier.mul(2);
                 updateDisplay();
             }
         });
@@ -203,11 +203,11 @@
             if (collapse.gte(autoclickers.successor.cost)) {
                 collapse = collapse.minus(autoclickers.successor.cost);
                 autoclickers.successor.active = true;
-                autoclickers.successor.cost *= 2;
+                autoclickers.successor.cost = autoclickers.successor.cost.mul(2);
                 autoclickers.successor.speed /= 2;
                 setInterval(() => {
                     if (autoclickers.successor.active) {
-                        collapse = collapse.plus(increaseMultiplier * enhanceSpeed);
+                        collapse = collapse.plus(increaseMultiplier);
                         updateDisplay();
                     }
                 }, autoclickers.successor.speed);
@@ -219,11 +219,11 @@
             if (collapse.gte(autoclickers.enhance.cost)) {
                 collapse = collapse.minus(autoclickers.enhance.cost);
                 autoclickers.enhance.active = true;
-                autoclickers.enhance.cost *= 2;
+                autoclickers.enhance.cost = autoclickers.enhance.cost.mul(2);
                 autoclickers.enhance.speed /= 2;
                 setInterval(() => {
                     if (autoclickers.enhance.active) {
-                        enhanceSpeed *= 1.0015;
+                        enhanceSpeed = enhanceSpeed.mul(1.0015);
                         updateDisplay();
                     }
                 }, autoclickers.enhance.speed);
@@ -235,24 +235,16 @@
             if (collapse.gte(autoclickers.enhanceMultiplier.cost)) {
                 collapse = collapse.minus(autoclickers.enhanceMultiplier.cost);
                 autoclickers.enhanceMultiplier.active = true;
-                autoclickers.enhanceMultiplier.cost *= 2;
+                autoclickers.enhanceMultiplier.cost = autoclickers.enhanceMultiplier.cost.mul(2);
                 autoclickers.enhanceMultiplier.speed /= 2;
                 setInterval(() => {
-                    if (autoclickers.enhanceMultiplier.active) {
-                        if (collapse.gte(100)) {
-                            collapse = collapse.minus(100);
-                            increaseMultiplier *= 2;
-                            updateDisplay();
-                        }
+                    if (autoclickers.enhanceMultiplier.active && collapse.gte(100)) {
+                        collapse = collapse.minus(100);
+                        increaseMultiplier = increaseMultiplier.mul(2);
+                        updateDisplay();
                     }
                 }, autoclickers.enhanceMultiplier.speed);
             }
-        });
-
-        // Max All button functionality
-        document.getElementById('maxAll').addEventListener('click', () => {
-            // Implement logic to max purchases within player's collapse limit
-            // Placeholder, adjust costs and calls for a real implementation
         });
 
         updateDisplay();
