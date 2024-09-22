@@ -54,6 +54,7 @@
         let autoclickerSpeed = new Big(0);
         let baseAutoclickSpeed = new Big(0.01); // 1x per second (slower)
         let speedIncrease = new Big(0.01); // Initial speed for enhance
+        const speedMultiplier = 1.012215; // 1.1215% increase
 
         // Update the display
         function updateDisplay() {
@@ -68,8 +69,7 @@
 
         // Enhance collapse speed
         document.getElementById('enhanceCollapse').addEventListener('click', () => {
-            const chosenMultiplier = Math.random() * 3 + 1; // Random between 1 and 4
-            speedIncrease = speedIncrease.times(chosenMultiplier);
+            speedIncrease = speedIncrease.times(speedMultiplier);
         });
 
         // Toggle upgrades visibility
