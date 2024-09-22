@@ -47,14 +47,14 @@
 <body>
 
     <h1>The Collapse of Incrementals</h1>
-    <div id="collapse">Collapse: 1</div>
+    <div id="collapse">Collapse: 1.00</div>
     <button id="increaseCollapse">Increase Collapse</button>
     <button id="enhanceCollapse">Enhance Collapse</button>
     
     <div>
-        <button class="tab-button" id="toggleUpgrades">Show Upgrades</button>
-        <button class="tab-button" id="toggleAutoclickers">Show Autoclickers</button>
-        <button class="tab-button" id="toggleOptions">Show Options</button>
+        <button class="tab-button" id="toggleUpgrades">Upgrades</button>
+        <button class="tab-button" id="toggleAutoclickers">Autoclickers</button>
+        <button class="tab-button" id="toggleOptions">Options</button>
     </div>
     
     <div id="upgrades">
@@ -66,6 +66,7 @@
     <div id="autoclickers">
         <h2>Autoclickers</h2>
         <button id="enhanceAutoclicker">Enhance Autoclicker (1600 Collapse)</button>
+        <button id="enhanceIncreaseMultiplierAutoclicker">Enhance Increase Multiplier Autoclicker (3500 Collapse)</button>
     </div>
 
     <div id="options">
@@ -132,14 +133,25 @@
     <script>
         let collapse = new Big(1);
         const collapseDisplay = document.getElementById('collapse');
-        let increaseMultiplier = 1; // Initial increase multiplier
-        let successorActive = false; // Flag for Successor Autoclicker
-        let enhanceActive = false; // Flag for Enhance Autoclicker
-        let offlineProgress = false; // Offline progress flag
+        let increaseMultiplier = 1;
+        let enhanceSpeed = 1;
+        let autoclickers = {
+            successor: { cost: 800, speed: 1000, active: false },
+            enhance: { cost: 1600, speed: 1000, active: false },
+            enhanceMultiplier: { cost: 3500, speed: 1000, active: false }
+        };
+
+        // Format number with commas and decimals
+        function formatNumber(num) {
+            if (num.gte(1e9)) {
+                return num.toExponential(2); // Use scientific notation above 1 billion
+            }
+            return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
 
         // Update the display
         function updateDisplay() {
-            collapseDisplay.textContent = `Collapse: ${collapse.toString()}`;
+            collapseDisplay.textContent = `Collapse: ${formatNumber(collapse)}`;
         }
 
         // Increase collapse by the current multiplier
@@ -150,123 +162,100 @@
 
         // Enhance collapse speed
         document.getElementById('enhanceCollapse').addEventListener('click', () => {
-            collapse = collapse.plus(0.325); // Add +0.325 to collapse speed
+            enhanceSpeed *= 1.0015;
             updateDisplay();
         });
 
-        // Show upgrades and hide other tabs
-        document.getElementById('toggleUpgrades').addEventListener('click', () => {
-            document.getElementById('upgrades').style.display = 'block';
+        // Toggle tabs visibility
+        function toggleTab(showTab) {
+            document.getElementById('upgrades').style.display = 'none';
             document.getElementById('autoclickers').style.display = 'none';
             document.getElementById('options').style.display = 'none';
+            document.getElementById(showTab).style.display = 'block';
+        }
+
+        // Show upgrades and hide other tabs
+        document.getElementById('toggleUpgrades').addEventListener('click', () => {
+            toggleTab('upgrades');
         });
 
         // Show autoclickers and hide other tabs
         document.getElementById('toggleAutoclickers').addEventListener('click', () => {
-            document.getElementById('autoclickers').style.display = 'block';
-            document.getElementById('upgrades').style.display = 'none';
-            document.getElementById('options').style.display = 'none';
+            toggleTab('autoclickers');
         });
 
         // Show options and hide other tabs
         document.getElementById('toggleOptions').addEventListener('click', () => {
-            document.getElementById('options').style.display = 'block';
-            document.getElementById('upgrades').style.display = 'none';
-            document.getElementById('autoclickers').style.display = 'none';
+            toggleTab('options');
         });
 
         // Enhance increase multiplier
         document.getElementById('enhanceIncreaseMultiplier').addEventListener('click', () => {
             if (collapse.gte(100)) {
                 collapse = collapse.minus(100);
-                increaseMultiplier *= 2; // Double the increase
+                increaseMultiplier *= 2;
                 updateDisplay();
             }
         });
 
         // Successor autoclicker
         document.getElementById('successorAutoclicker').addEventListener('click', () => {
-            if (collapse.gte(800)) {
-                collapse = collapse.minus(800);
-                successorActive = true; // Activate Successor Autoclicker
-                updateDisplay();
+            if (collapse.gte(autoclickers.successor.cost)) {
+                collapse = collapse.minus(autoclickers.successor.cost);
+                autoclickers.successor.active = true;
+                autoclickers.successor.cost *= 2;
+                autoclickers.successor.speed /= 2;
+                setInterval(() => {
+                    if (autoclickers.successor.active) {
+                        collapse = collapse.plus(increaseMultiplier * enhanceSpeed);
+                        updateDisplay();
+                    }
+                }, autoclickers.successor.speed);
             }
         });
 
         // Enhance autoclicker
         document.getElementById('enhanceAutoclicker').addEventListener('click', () => {
-            if (collapse.gte(1600)) {
-                collapse = collapse.minus(1600);
-                enhanceActive = true; // Activate Enhance Autoclicker
-                updateDisplay();
+            if (collapse.gte(autoclickers.enhance.cost)) {
+                collapse = collapse.minus(autoclickers.enhance.cost);
+                autoclickers.enhance.active = true;
+                autoclickers.enhance.cost *= 2;
+                autoclickers.enhance.speed /= 2;
+                setInterval(() => {
+                    if (autoclickers.enhance.active) {
+                        enhanceSpeed *= 1.0015;
+                        updateDisplay();
+                    }
+                }, autoclickers.enhance.speed);
             }
         });
 
-        // Automatic increase of collapse
-        setInterval(() => {
-            if (successorActive) {
-                collapse = collapse.plus(increaseMultiplier); // Successor Autoclicker clicks Increase Collapse
-            }
-            if (enhanceActive) {
-                collapse = collapse.plus(0.325); // Enhance Autoclicker clicks Enhance Collapse
-            }
-            updateDisplay();
-        }, 1000); // Every second for autoclickers
-
-        // Add functionality for saving, exporting, and toggling options
-        document.getElementById('saveGame').addEventListener('click', () => {
-            // Save game logic here
-            alert("Game Saved!");
-        });
-
-        document.getElementById('exportSave').addEventListener('click', () => {
-            // Export save logic here
-            alert("Save Exported!");
-        });
-
-        document.getElementById('exportText').addEventListener('click', () => {
-            // Export save via text logic here
-            alert("Save Exported via Text!");
-        });
-
-        document.getElementById('exportHTML').addEventListener('click', () => {
-            // Export save via HTML logic here
-            alert("Save Exported via HTML!");
-        });
-
-        document.getElementById('toggleOfflineProgress').addEventListener('click', () => {
-            offlineProgress = !offlineProgress;
-            document.getElementById('toggleOfflineProgress').textContent = offlineProgress ? "ON" : "OFF";
-        });
-
-        document.getElementById('wipeSave').addEventListener('click', () => {
-            // Wipe save logic here
-            if (confirm("Are you sure you want to wipe your save?")) {
-                collapse = new Big(1); // Reset collapse
-                increaseMultiplier = 1; // Reset multiplier
-                successorActive = false; // Deactivate Successor Autoclicker
-                enhanceActive = false; // Deactivate Enhance Autoclicker
-                updateDisplay();
-                alert("Save wiped!");
+        // Enhance Increase Multiplier autoclicker
+        document.getElementById('enhanceIncreaseMultiplierAutoclicker').addEventListener('click', () => {
+            if (collapse.gte(autoclickers.enhanceMultiplier.cost)) {
+                collapse = collapse.minus(autoclickers.enhanceMultiplier.cost);
+                autoclickers.enhanceMultiplier.active = true;
+                autoclickers.enhanceMultiplier.cost *= 2;
+                autoclickers.enhanceMultiplier.speed /= 2;
+                setInterval(() => {
+                    if (autoclickers.enhanceMultiplier.active) {
+                        if (collapse.gte(100)) {
+                            collapse = collapse.minus(100);
+                            increaseMultiplier *= 2;
+                            updateDisplay();
+                        }
+                    }
+                }, autoclickers.enhanceMultiplier.speed);
             }
         });
 
-        // Update rate control (example implementation)
-        document.getElementById('updateRate').addEventListener('change', (event) => {
-            const rate = Math.max(10, Math.min(1500, parseInt(event.target.value, 10)));
-            clearInterval(autoUpdate);
-            autoUpdate = setInterval(() => {
-                if (successorActive) {
-                    collapse = collapse.plus(increaseMultiplier); // Successor Autoclicker clicks Increase Collapse
-                }
-                if (enhanceActive) {
-                    collapse = collapse.plus(0.325); // Enhance Autoclicker clicks Enhance Collapse
-                }
-                updateDisplay();
-            }, rate); // Set the new update rate
+        // Max All button functionality
+        document.getElementById('maxAll').addEventListener('click', () => {
+            // Implement logic to max purchases within player's collapse limit
+            // Placeholder, adjust costs and calls for a real implementation
         });
 
+        updateDisplay();
     </script>
-
 </body>
 </html>
