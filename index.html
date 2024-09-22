@@ -37,7 +37,7 @@
             padding: 5px 10px;
             margin: 5px;
         }
-        #upgrades, #autoclickers {
+        #upgrades, #autoclickers, #options {
             display: none;
             margin-top: 20px;
         }
@@ -54,6 +54,7 @@
     <div>
         <button class="tab-button" id="toggleUpgrades">Show Upgrades</button>
         <button class="tab-button" id="toggleAutoclickers">Show Autoclickers</button>
+        <button class="tab-button" id="toggleOptions">Show Options</button>
     </div>
     
     <div id="upgrades">
@@ -67,13 +68,75 @@
         <button id="enhanceAutoclicker">Enhance Autoclicker (1600 Collapse)</button>
     </div>
 
+    <div id="options">
+        <h2>Options</h2>
+        <button id="saveGame">Save</button>
+        <button id="exportSave">Export Save</button>
+        <button id="exportText">Export Save via Text</button>
+        <button id="exportHTML">Export Save via HTML</button>
+        
+        <h3>Size</h3>
+        <select id="sizeSelect">
+            <option value="compact">Compact</option>
+            <option value="75%">75%</option>
+            <option value="normal">Normal</option>
+            <option value="125%">125%</option>
+            <option value="150%">150%</option>
+            <option value="175%">175%</option>
+            <option value="large">Large</option>
+        </select>
+        
+        <h3>Offline Progress</h3>
+        <button id="toggleOfflineProgress">OFF</button>
+        
+        <h3>Music</h3>
+        <select id="musicSelect">
+            <option value="none">Select Music</option>
+            <option value="song1">Song 1</option>
+            <option value="song2">Song 2</option>
+        </select>
+
+        <button id="wipeSave" style="color: red;">WIPE SAVE</button>
+        
+        <h3>Update Rate</h3>
+        <input type="number" id="updateRate" min="10" max="1500" step="10" value="100"> ms
+        
+        <h3>Themes</h3>
+        <select id="themeSelect">
+            <option value="retro">Retro</option>
+            <option value="xp">eXPerience (Windows XP)</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="darkxp">Dark eXPerience</option>
+            <option value="inverted">Inverted</option>
+            <option value="darkinverted">Dark Inverted</option>
+            <option value="invertedretro">Inverted Retro</option>
+            <option value="invertedxp">Inverted eXPerience</option>
+            <option value="darkinvertedxp">Dark Inverted eXPerience</option>
+        </select>
+        
+        <h3>Fonts</h3>
+        <select id="fontSelect">
+            <option value="source">Source Code SemiBold</option>
+            <option value="minecrafty">Minecrafty</option>
+            <option value="montserrat">Montserrat</option>
+            <option value="merriweather">Merriweather</option>
+            <option value="arial">Arial</option>
+            <option value="archivo">Archivo</option>
+            <option value="archivoblack">Archivo Black</option>
+            <option value="arialblack">Arial Black</option>
+            <option value="wingdings">Wingdings</option>
+        </select>
+    </div>
+
     <script>
         let collapse = new Big(1);
         const collapseDisplay = document.getElementById('collapse');
         let increaseMultiplier = 1; // Initial increase multiplier
         let successorActive = false; // Flag for Successor Autoclicker
         let enhanceActive = false; // Flag for Enhance Autoclicker
-        
+        let offlineProgress = false; // Offline progress flag
+
         // Update the display
         function updateDisplay() {
             collapseDisplay.textContent = `Collapse: ${collapse.toString()}`;
@@ -91,16 +154,25 @@
             updateDisplay();
         });
 
-        // Show upgrades and hide autoclickers
+        // Show upgrades and hide other tabs
         document.getElementById('toggleUpgrades').addEventListener('click', () => {
             document.getElementById('upgrades').style.display = 'block';
             document.getElementById('autoclickers').style.display = 'none';
+            document.getElementById('options').style.display = 'none';
         });
 
-        // Show autoclickers and hide upgrades
+        // Show autoclickers and hide other tabs
         document.getElementById('toggleAutoclickers').addEventListener('click', () => {
             document.getElementById('autoclickers').style.display = 'block';
             document.getElementById('upgrades').style.display = 'none';
+            document.getElementById('options').style.display = 'none';
+        });
+
+        // Show options and hide other tabs
+        document.getElementById('toggleOptions').addEventListener('click', () => {
+            document.getElementById('options').style.display = 'block';
+            document.getElementById('upgrades').style.display = 'none';
+            document.getElementById('autoclickers').style.display = 'none';
         });
 
         // Enhance increase multiplier
@@ -140,6 +212,59 @@
             }
             updateDisplay();
         }, 1000); // Every second for autoclickers
+
+        // Add functionality for saving, exporting, and toggling options
+        document.getElementById('saveGame').addEventListener('click', () => {
+            // Save game logic here
+            alert("Game Saved!");
+        });
+
+        document.getElementById('exportSave').addEventListener('click', () => {
+            // Export save logic here
+            alert("Save Exported!");
+        });
+
+        document.getElementById('exportText').addEventListener('click', () => {
+            // Export save via text logic here
+            alert("Save Exported via Text!");
+        });
+
+        document.getElementById('exportHTML').addEventListener('click', () => {
+            // Export save via HTML logic here
+            alert("Save Exported via HTML!");
+        });
+
+        document.getElementById('toggleOfflineProgress').addEventListener('click', () => {
+            offlineProgress = !offlineProgress;
+            document.getElementById('toggleOfflineProgress').textContent = offlineProgress ? "ON" : "OFF";
+        });
+
+        document.getElementById('wipeSave').addEventListener('click', () => {
+            // Wipe save logic here
+            if (confirm("Are you sure you want to wipe your save?")) {
+                collapse = new Big(1); // Reset collapse
+                increaseMultiplier = 1; // Reset multiplier
+                successorActive = false; // Deactivate Successor Autoclicker
+                enhanceActive = false; // Deactivate Enhance Autoclicker
+                updateDisplay();
+                alert("Save wiped!");
+            }
+        });
+
+        // Update rate control (example implementation)
+        document.getElementById('updateRate').addEventListener('change', (event) => {
+            const rate = Math.max(10, Math.min(1500, parseInt(event.target.value, 10)));
+            clearInterval(autoUpdate);
+            autoUpdate = setInterval(() => {
+                if (successorActive) {
+                    collapse = collapse.plus(increaseMultiplier); // Successor Autoclicker clicks Increase Collapse
+                }
+                if (enhanceActive) {
+                    collapse = collapse.plus(0.325); // Enhance Autoclicker clicks Enhance Collapse
+                }
+                updateDisplay();
+            }, rate); // Set the new update rate
+        });
 
     </script>
 
