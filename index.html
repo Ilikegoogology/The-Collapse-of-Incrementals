@@ -22,6 +22,13 @@
             font-size: 1.2em;
             margin: 10px;
         }
+        #upgrades {
+            display: none;
+            margin-top: 20px;
+        }
+        #toggleUpgrades {
+            margin-top: 20px;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/6.0.0/big.min.js"></script>
 </head>
@@ -30,17 +37,23 @@
     <h1>The Collapse of Incrementals</h1>
     <div id="collapse">Collapse: 1</div>
     <button id="increaseCollapse">Increase Collapse</button>
-    <button id="enhanceIncreaseMultiplier">Enhance Increase Multiplier (100 Collapse)</button>
-    <button id="successorAutoclicker">Successor Autoclicker (800 Collapse)</button>
-    <button id="enhanceAutoclicker">Enhance Autoclicker (1600 Collapse)</button>
+    <button id="enhanceCollapse">Enhance Collapse</button>
+    <button id="toggleUpgrades">Toggle Upgrades</button>
+    
+    <div id="upgrades">
+        <h2>Upgrades</h2>
+        <button id="enhanceIncreaseMultiplier">Enhance Increase Multiplier (100 Collapse)</button>
+        <button id="successorAutoclicker">Successor Autoclicker (800 Collapse)</button>
+        <button id="enhanceAutoclicker">Enhance Autoclicker (1600 Collapse)</button>
+    </div>
 
     <script>
         let collapse = new Big(1);
         const collapseDisplay = document.getElementById('collapse');
         let increaseMultiplier = 1.47;
         let autoclickerSpeed = new Big(0);
-        let baseAutoclickSpeed = new Big(0.04); // 4x per second
-        let autoclickerCostMultiplier = 1;
+        let baseAutoclickSpeed = new Big(0.01); // 1x per second (slower)
+        let speedIncrease = new Big(0.01); // Initial speed for enhance
 
         // Update the display
         function updateDisplay() {
@@ -51,6 +64,18 @@
         document.getElementById('increaseCollapse').addEventListener('click', () => {
             collapse = collapse.plus(1);
             updateDisplay();
+        });
+
+        // Enhance collapse speed
+        document.getElementById('enhanceCollapse').addEventListener('click', () => {
+            const chosenMultiplier = Math.random() * 3 + 1; // Random between 1 and 4
+            speedIncrease = speedIncrease.times(chosenMultiplier);
+        });
+
+        // Toggle upgrades visibility
+        document.getElementById('toggleUpgrades').addEventListener('click', () => {
+            const upgradesDiv = document.getElementById('upgrades');
+            upgradesDiv.style.display = upgradesDiv.style.display === 'none' ? 'block' : 'none';
         });
 
         // Enhance increase multiplier
@@ -84,7 +109,7 @@
 
         // Automatic increase of collapse
         setInterval(() => {
-            collapse = collapse.plus(autoclickerSpeed);
+            collapse = collapse.plus(autoclickerSpeed).plus(speedIncrease);
             updateDisplay();
         }, 100); // 0.1 seconds (slower progression)
 
