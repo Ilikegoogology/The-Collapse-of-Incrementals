@@ -36,9 +36,6 @@
             display: none;
             margin-top: 20px;
         }
-        #toggleUpgrades, #toggleAutoclickers {
-            margin-top: 20px;
-        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/6.0.0/big.min.js"></script>
 </head>
@@ -48,8 +45,11 @@
     <div id="collapse">Collapse: 1</div>
     <button id="increaseCollapse">Increase Collapse</button>
     <button id="enhanceCollapse">Enhance Collapse</button>
-    <button id="toggleUpgrades">Toggle Upgrades</button>
-    <button id="toggleAutoclickers" style="display: none;">Toggle Autoclickers</button>
+    
+    <div>
+        <button id="toggleUpgrades">Show Upgrades</button>
+        <button id="toggleAutoclickers">Show Autoclickers</button>
+    </div>
     
     <div id="upgrades">
         <h2>Upgrades</h2>
@@ -68,8 +68,6 @@
         let increaseMultiplier = 1; // Initial increase multiplier
         let successorActive = false; // Flag for Successor Autoclicker
         let enhanceActive = false; // Flag for Enhance Autoclicker
-        let successorClicks = 0; // Count of Successor clicks
-        let enhanceClicks = 0; // Count of Enhance clicks
         
         // Update the display
         function updateDisplay() {
@@ -88,19 +86,16 @@
             updateDisplay();
         });
 
-        // Toggle upgrades visibility
+        // Show upgrades and hide autoclickers
         document.getElementById('toggleUpgrades').addEventListener('click', () => {
-            const upgradesDiv = document.getElementById('upgrades');
-            upgradesDiv.style.display = upgradesDiv.style.display === 'none' ? 'block' : 'none';
-            if (upgradesDiv.style.display === 'block') {
-                document.getElementById('toggleAutoclickers').style.display = 'block'; // Show autoclickers toggle
-            }
+            document.getElementById('upgrades').style.display = 'block';
+            document.getElementById('autoclickers').style.display = 'none';
         });
 
-        // Toggle autoclickers visibility
+        // Show autoclickers and hide upgrades
         document.getElementById('toggleAutoclickers').addEventListener('click', () => {
-            const autoclickersDiv = document.getElementById('autoclickers');
-            autoclickersDiv.style.display = autoclickersDiv.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('autoclickers').style.display = 'block';
+            document.getElementById('upgrades').style.display = 'none';
         });
 
         // Enhance increase multiplier
@@ -117,7 +112,6 @@
             if (collapse.gte(800)) {
                 collapse = collapse.minus(800);
                 successorActive = true; // Activate Successor Autoclicker
-                document.getElementById('toggleAutoclickers').style.display = 'block'; // Show autoclickers toggle
                 updateDisplay();
             }
         });
@@ -134,12 +128,10 @@
         // Automatic increase of collapse
         setInterval(() => {
             if (successorActive) {
-                successorClicks += increaseMultiplier; // Successor Autoclicker clicks Increase Collapse
-                collapse = collapse.plus(successorClicks);
+                collapse = collapse.plus(increaseMultiplier); // Successor Autoclicker clicks Increase Collapse
             }
             if (enhanceActive) {
-                enhanceClicks += 0.325; // Enhance Autoclicker clicks Enhance Collapse
-                collapse = collapse.plus(enhanceClicks);
+                collapse = collapse.plus(0.325); // Enhance Autoclicker clicks Enhance Collapse
             }
             updateDisplay();
         }, 1000); // Every second for autoclickers
