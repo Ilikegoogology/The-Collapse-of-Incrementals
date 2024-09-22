@@ -32,6 +32,11 @@
         button:hover {
             box-shadow: 0 0 10px blue, 0 0 20px blue, 0 0 30px blue;
         }
+        .tab-button {
+            font-size: 1em;
+            padding: 5px 10px;
+            margin: 5px;
+        }
         #upgrades, #autoclickers {
             display: none;
             margin-top: 20px;
@@ -47,8 +52,8 @@
     <button id="enhanceCollapse">Enhance Collapse</button>
     
     <div>
-        <button id="toggleUpgrades">Show Upgrades</button>
-        <button id="toggleAutoclickers">Show Autoclickers</button>
+        <button class="tab-button" id="toggleUpgrades">Show Upgrades</button>
+        <button class="tab-button" id="toggleAutoclickers">Show Autoclickers</button>
     </div>
     
     <div id="upgrades">
