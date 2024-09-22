@@ -54,7 +54,7 @@
         let autoclickerSpeed = new Big(0);
         let baseAutoclickSpeed = new Big(0.01); // 1x per second (slower)
         let speedIncrease = new Big(0.01); // Initial speed for enhance
-        const speedMultiplier = 1.012215; // 1.1215% increase
+        const speedMultiplier = new Big(1.0015); // Factor for speed increase
 
         // Update the display
         function updateDisplay() {
