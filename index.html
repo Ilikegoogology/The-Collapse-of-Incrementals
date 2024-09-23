@@ -46,16 +46,17 @@
         /* News Ticker Styling */
         .news-ticker {
             position: fixed;
-            bottom: 0;
+            top: 0;
             width: 100%;
             background-color: #333;
             color: #fff;
             overflow: hidden;
             white-space: nowrap;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
             font-size: 14px;
             font-family: 'Source Code Pro', sans-serif;
             z-index: 9999;
+            height: 30px; /* Adjust height as needed */
         }
 
         .ticker-content {
@@ -71,6 +72,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/6.0.0/big.min.js"></script>
 </head>
 <body>
+
+    <!-- News Ticker -->
+    <div class="news-ticker">
+        <div class="ticker-content">
+            Breaking News: New Enhancements Added! | Try the new "Enhance Collapse" feature! | Save and Export your progress easily! | More updates coming soon!
+            What? 
+            If polytope exist, and if polychora exist, then why I'd no polychord! 
+            Free pizza 
+            O? 
+            N? 
+            On
+            Outerversally insane, I don't know what to do now 
+            Exception - what? 
+        </div>
+    </div>
 
     <h1>The Collapse of Incrementals</h1>
     <div id="collapse">Collapse: 1</div>
@@ -97,21 +113,6 @@
     <div id="options">
         <h2>Options</h2>
         <!-- Options code remains the same -->
-    </div>
-
-    <!-- News Ticker -->
-    <div class="news-ticker">
-        <div class="ticker-content">
-            Breaking News: New Enhancements Added! | Try the new "Enhance Collapse" feature! | Save and Export your progress easily! | More updates coming soon!
-            What? 
-            If polytope exist, and if polychora exist, then why I'd no polychord! 
-            Free pizza 
-            O? 
-            N? 
-            On
-            Outerversally insane, I don't know what to do now 
-            Exception - what? 
-        </div>
     </div>
 
     <script>
@@ -188,6 +189,13 @@
             updateDisplay();
         }, 1000);
 
+        // Add delay of 5 seconds after each animation loop
+        document.querySelector('.ticker-content').addEventListener('animationiteration', function() {
+            this.style.animationPlayState = 'paused'; // Pause after each loop
+            setTimeout(() => {
+                this.style.animationPlayState = 'running'; // Resume animation after 5 seconds
+            }, 5000); // 5-second delay
+        });
     </script>
 
 </body>
