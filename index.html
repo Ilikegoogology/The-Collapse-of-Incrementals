@@ -42,51 +42,10 @@
             display: none;
             margin-top: 20px;
         }
-
-        /* News Ticker Styling */
-        .news-ticker {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: #333;
-            color: #fff;
-            overflow: hidden;
-            white-space: nowrap;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-            font-size: 14px;
-            font-family: 'Source Code Pro', sans-serif;
-            z-index: 9999;
-            height: 30px; /* Adjust height as needed */
-        }
-
-        .ticker-content {
-            display: inline-block;
-            animation: ticker 20s linear infinite;
-        }
-
-        @keyframes ticker {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/6.0.0/big.min.js"></script>
 </head>
 <body>
-
-    <!-- News Ticker -->
-    <div class="news-ticker">
-        <div class="ticker-content">
-            Breaking News: New Enhancements Added! | Try the new "Enhance Collapse" feature! | Save and Export your progress easily! | More updates coming soon!
-            What? 
-            If polytope exist, and if polychora exist, then why I'd no polychord! 
-            Free pizza 
-            O? 
-            N? 
-            On
-            Outerversally insane, I don't know what to do now 
-            Exception - what? 
-        </div>
-    </div>
 
     <h1>The Collapse of Incrementals</h1>
     <div id="collapse">Collapse: 1</div>
@@ -100,102 +59,7 @@
     </div>
     
     <div id="upgrades">
-        <h2>Upgrades</h2>
-        <button id="enhanceIncreaseMultiplier">Enhance Increase Multiplier (100 Collapse)</button>
-        <button id="successorAutoclicker">Successor Autoclicker (800 Collapse)</button>
-    </div>
-
-    <div id="autoclickers">
-        <h2>Autoclickers</h2>
-        <button id="enhanceAutoclicker">Enhance Autoclicker (1600 Collapse)</button>
-    </div>
-
-    <div id="options">
-        <h2>Options</h2>
-        <!-- Options code remains the same -->
-    </div>
-
-    <script>
-        let collapse = new Big(1);
-        const collapseDisplay = document.getElementById('collapse');
-        let increaseMultiplier = 1; // Initial increase multiplier
-        let successorActive = false; // Flag for Successor Autoclicker
-        let enhanceActive = false; // Flag for Enhance Autoclicker
-        let offlineProgress = false; // Offline progress flag
-
-        function updateDisplay() {
-            collapseDisplay.textContent = `Collapse: ${collapse.toString()}`;
-        }
-
-        document.getElementById('increaseCollapse').addEventListener('click', () => {
-            collapse = collapse.plus(increaseMultiplier);
-            updateDisplay();
-        });
-
-        document.getElementById('enhanceCollapse').addEventListener('click', () => {
-            collapse = collapse.plus(0.325);
-            updateDisplay();
-        });
-
-        document.getElementById('toggleUpgrades').addEventListener('click', () => {
-            document.getElementById('upgrades').style.display = 'block';
-            document.getElementById('autoclickers').style.display = 'none';
-            document.getElementById('options').style.display = 'none';
-        });
-
-        document.getElementById('toggleAutoclickers').addEventListener('click', () => {
-            document.getElementById('autoclickers').style.display = 'block';
-            document.getElementById('upgrades').style.display = 'none';
-            document.getElementById('options').style.display = 'none';
-        });
-
-        document.getElementById('toggleOptions').addEventListener('click', () => {
-            document.getElementById('options').style.display = 'block';
-            document.getElementById('upgrades').style.display = 'none';
-            document.getElementById('autoclickers').style.display = 'none';
-        });
-
-        document.getElementById('enhanceIncreaseMultiplier').addEventListener('click', () => {
-            if (collapse.gte(100)) {
-                collapse = collapse.minus(100);
-                increaseMultiplier *= 2;
-                updateDisplay();
-            }
-        });
-
-        document.getElementById('successorAutoclicker').addEventListener('click', () => {
-            if (collapse.gte(800)) {
-                collapse = collapse.minus(800);
-                successorActive = true;
-                updateDisplay();
-            }
-        });
-
-        document.getElementById('enhanceAutoclicker').addEventListener('click', () => {
-            if (collapse.gte(1600)) {
-                collapse = collapse.minus(1600);
-                enhanceActive = true;
-                updateDisplay();
-            }
-        });
-
-        setInterval(() => {
-            if (successorActive) {
-                collapse = collapse.plus(increaseMultiplier);
-            }
-            if (enhanceActive) {
-                collapse = collapse.plus(0.325);
-            }
-            updateDisplay();
-        }, 1000);
-
-        // Add delay of 5 seconds after each animation loop
-        document.querySelector('.ticker-content').addEventListener('animationiteration', function() {
-            this.style.animationPlayState = 'paused'; // Pause after each loop
-            setTimeout(() => {
-                this.style.animationPlayState = 'running'; // Resume animation after 5 seconds
-            }, 5000); // 5-second delay
-        });
+        
     </script>
 
 </body>
