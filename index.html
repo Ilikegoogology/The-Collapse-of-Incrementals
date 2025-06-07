@@ -41,6 +41,7 @@
         #upgrades, #autoclickers, #options {
             display: none;
             margin-top: 20px;
+            color: white;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/6.0.0/big.min.js"></script>
@@ -59,7 +60,40 @@
     </div>
     
     <div id="upgrades">
-        
+        <p>Upgrade section content here.</p>
+    </div>
+    <div id="autoclickers">
+        <p>Autoclicker section content here.</p>
+    </div>
+    <div id="options">
+        <p>Options section content here.</p>
+    </div>
+
+    <script>
+        let collapse = new Big(1);
+
+        const collapseDisplay = document.getElementById("collapse");
+        const increaseBtn = document.getElementById("increaseCollapse");
+        const enhanceBtn = document.getElementById("enhanceCollapse");
+
+        increaseBtn.addEventListener("click", () => {
+            collapse = collapse.plus(1);
+            collapseDisplay.textContent = "Collapse: " + collapse.toString();
+        });
+
+        enhanceBtn.addEventListener("click", () => {
+            collapse = collapse.times(2);
+            collapseDisplay.textContent = "Collapse: " + collapse.toString();
+        });
+
+        const toggleSection = (id) => {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none";
+        };
+
+        document.getElementById("toggleUpgrades").addEventListener("click", () => toggleSection("upgrades"));
+        document.getElementById("toggleAutoclickers").addEventListener("click", () => toggleSection("autoclickers"));
+        document.getElementById("toggleOptions").addEventListener("click", () => toggleSection("options"));
     </script>
 
 </body>
